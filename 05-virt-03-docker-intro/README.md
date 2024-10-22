@@ -376,6 +376,46 @@ WARN[0000] /tmp/netology/docker/task5/docker-compose.yaml: the attribute `versio
  ✔ Container task5-registry-1                                          Started                                                                                                           0.3s 
  ! registry Published ports are discarded when using host network mode   
 
+# заливаем на локальный registry
+
+root@fedora /tmp/netology/docker/task5 $ docker login 127.0.0.1:5000
+Username: admin
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+root@fedora /tmp/netology/docker/task5 $ docker tag custom-nginx:1.0.0 localhost:5000/custom-nginx:latest
+root@fedora /tmp/netology/docker/task5 $ docker push localhost:5000/custom-nginx:latest
+The push refers to repository [localhost:5000/custom-nginx]
+1b793b594296: Pushed 
+d47e4d19ddec: Pushed 
+8e58314e4a4f: Pushed 
+ed94af62a494: Pushed 
+875b5b50454b: Pushed 
+63b5f2c0d071: Pushed 
+d000633a5681: Pushed 
+latest: digest: sha256:3adae6e47184c286fdd84f0a44735d68eaaeac56587ab5e6b7f1f22652da4553 size: 1777
+
+# Удалите любой из манифестов компоуза
+root@fedora /tmp/netology/docker/task5 $ rm docker-compose.yaml 
+rm: удалить обычный файл 'docker-compose.yaml'? y
+
+root@fedora /tmp/netology/docker/task5 $ docker compose up -d
+open docker-compose.yaml: no such file or directory
+
+# нарушена целостность структуры описанной в compose.yaml
+# нужно восстановить манифест
+
+# Погасите compose-проект ОДНОЙ(обязательно!!) командой
+root@fedora /tmp/netology/docker/task5 $ docker compose down -v
+WARN[0000] Found multiple config files with supported names: /tmp/netology/docker/task5/compose.yaml, /tmp/netology/docker/task5/docker-compose.yaml 
+WARN[0000] Using /tmp/netology/docker/task5/compose.yaml 
+[+] Running 2/2
+ ✔ Container task5-registry-1   Removed                                                                                                                                                  0.2s 
+ ✔ Container task5-portainer-1  Removed 
+
 ```
 
 ---
